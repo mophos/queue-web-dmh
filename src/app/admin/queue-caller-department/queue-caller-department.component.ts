@@ -70,6 +70,7 @@ export class QueueCallerDepartmentComponent implements OnInit {
   query: any;
 
   @ViewChild(CountdownComponent) counter: CountdownComponent;
+  pendigOldQueue: any;
 
   constructor(
     private queueService: QueueService,
@@ -349,7 +350,7 @@ export class QueueCallerDepartmentComponent implements OnInit {
   onSelectedTransfer(event: any) {
     this.pendingToServicePointId = event.servicePointId;
     this.pendingToPriorityId = event.priorityId;
-
+    this.pendigOldQueue = event.pendigOldQueue
     this.doMarkPending(this.selectedQueue);
   }
 
@@ -363,7 +364,7 @@ export class QueueCallerDepartmentComponent implements OnInit {
       const _confirm = await this.alertService.confirm(textShow);
       if (_confirm) {
         try {
-          const rs: any = await this.queueService.markPending(item.queue_id, this.pendingToServicePointId, this.pendingToPriorityId);
+          const rs: any = await this.queueService.markPending(item.queue_id, this.pendingToServicePointId, this.pendingToPriorityId, this.pendigOldQueue);
           if (rs.statusCode === 200) {
             this.alertService.success();
             this.selectedQueue = {};

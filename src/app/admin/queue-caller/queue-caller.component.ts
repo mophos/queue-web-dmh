@@ -67,6 +67,7 @@ export class QueueCallerComponent implements OnInit, OnDestroy {
   departmentId: any;
 
   @ViewChild(CountdownComponent) counter: CountdownComponent;
+  pendigOldQueue: any;
 
   constructor(
     private queueService: QueueService,
@@ -342,7 +343,9 @@ export class QueueCallerComponent implements OnInit, OnDestroy {
   onSelectedTransfer(event: any) {
     this.pendingToServicePointId = event.servicePointId;
     this.pendingToPriorityId = event.priorityId;
-
+    this.pendigOldQueue = event.pendigOldQueue
+    console.log(event.pendigOldQueue);
+    
     this.doMarkPending(this.selectedQueue);
   }
 
@@ -431,7 +434,7 @@ export class QueueCallerComponent implements OnInit, OnDestroy {
       const _confirm = await this.alertService.confirm(textShow);
       if (_confirm) {
         try {
-          const rs: any = await this.queueService.markPending(item.queue_id, this.pendingToServicePointId, this.pendingToPriorityId);
+          const rs: any = await this.queueService.markPending(item.queue_id, this.pendingToServicePointId, this.pendingToPriorityId, this.pendigOldQueue);
           if (rs.statusCode === 200) {
             this.alertService.success();
             this.selectedQueue = {};
