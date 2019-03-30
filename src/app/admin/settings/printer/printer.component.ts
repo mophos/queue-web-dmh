@@ -11,6 +11,7 @@ export class PrinterComponent implements OnInit {
   printerId: any;
   usePrinter: any;
   printSmallQueue: any; // for DMH
+  printPendingQueue: any; // for DMH
 
   constructor(
     private alertService: AlertService
@@ -20,12 +21,14 @@ export class PrinterComponent implements OnInit {
     this.printerId = localStorage.getItem('clientPrinterId');
     this.usePrinter = localStorage.getItem('clientUserPrinter') === 'Y' ? true : false;
     this.printSmallQueue = localStorage.getItem('printSmallQueue') === 'Y' ? true : false;
+    this.printPendingQueue = localStorage.getItem('printPendingQueue') === 'N' ? true : false;
   }
 
   save() {
     localStorage.setItem('clientPrinterId', this.printerId);
     localStorage.setItem('clientUserPrinter', this.usePrinter ? 'Y' : 'N');
     localStorage.setItem('printSmallQueue', this.printSmallQueue ? 'Y' : 'N');
+    localStorage.setItem('printPendingQueue', this.printPendingQueue ? 'N' : 'Y');
     this.alertService.success();
   }
 

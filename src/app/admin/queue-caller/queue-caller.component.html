@@ -28,6 +28,15 @@
         </a>
       </li>
     </ol>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item" *ngIf="servicePointId">
+        <span class="h1 text-primary font-weight-bold">{{roomName || 'กรุณาเลือกช่องบริการ'}}</span>
+        &nbsp; | &nbsp;
+        <a href="javascript://" (click)="selectRoom()">
+          <span style="font-size: 1.4rem;">เปลี่ยนช่องบริการ</span>
+        </a>
+      </li>
+    </ol>
   </nav>
 </div>
 
@@ -177,18 +186,25 @@
                         ซักประวัติ
                       </span>
                     </button>
-                    <button *ngIf="rooms.length > 5" class="btn btn-sm btn-success" (click)="openModalSelectRoom(item)">
+                    <button *ngIf="roomId" class="btn btn-sm btn-success" (click)="setCallDetail(item)">
                       <span class="h4">
                         เรียกคิว
                       </span>
                     </button>
-                    <button *ngIf="rooms.length > 1 && rooms.length <= 5" class="btn btn-sm btn-success"
+                    <button *ngIf="rooms.length > 5 &&!roomId" class="btn btn-sm btn-success"
+                      (click)="openModalSelectRoom(item)">
+                      <span class="h4">
+                        เรียกคิว
+                      </span>
+                    </button>
+                    <button *ngIf="(rooms.length > 1 && rooms.length <= 5)  &&!roomId" class="btn btn-sm btn-success"
                       (click)="setQueueForCall(item)" [ngbPopover]="popContent" popoverTitle="เลือกช่องรับบริการ">
                       <span class="h4">
                         เรียกคิว
                       </span>
                     </button>
-                    <button *ngIf="rooms.length === 1" class="btn btn-sm btn-success" (click)="setCallDetail(item)">
+                    <button *ngIf="rooms.length === 1  &&!roomId" class="btn btn-sm btn-success"
+                      (click)="setCallDetail(item)">
                       <span class="h4">
                         เรียกคิว
                       </span>
@@ -282,12 +298,13 @@
                   <span class="h3">{{item.pending_to_service_point_name}}</span>
                 </td>
                 <td>
-                  <button *ngIf="rooms.length > 5" class="btn btn-sm btn-success" (click)="openModalSelectRoom(item)">
+                  <button *ngIf="rooms.length > 5 && roomName" class="btn btn-sm btn-success"
+                    (click)="openModalSelectRoom(item)">
                     <span class="h4">
                       เรียกคิว
                     </span>
                   </button>
-                  <button *ngIf="rooms.length > 1 && rooms.length <= 5" class="btn btn-sm btn-success"
+                  <button *ngIf="(rooms.length > 1 && rooms.length <= 5 ) && roomName" class="btn btn-sm btn-success"
                     (click)="setQueueForCall(item)" [ngbPopover]="popContent" popoverTitle="เลือกช่องรับบริการ">
                     <span class="h4">
                       เรียกคิว
@@ -415,3 +432,5 @@
 <app-modal-select-transfer #mdlSelectTransfer (onSelected)="onSelectedTransfer($event)"></app-modal-select-transfer>
 
 <app-modal-select-room [rooms]="rooms" (onSelected)="onSelectRoom($event)" #mdlSelectRoom></app-modal-select-room>
+<app-modal-select-room [rooms]="rooms" (onSelected)="onSelectDefaultRoom($event)" #mdlSelectDefaultRoom>
+</app-modal-select-room>
