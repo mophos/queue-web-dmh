@@ -23,6 +23,7 @@ export class QueueCallerComponent implements OnInit, OnDestroy {
   @ViewChild('mdlServicePoint') private mdlServicePoint: ModalSelectServicepointsComponent;
   @ViewChild('mdlSelectTransfer') private mdlSelectTransfer: ModalSelectTransferComponent;
   @ViewChild('mdlSelectRoom') private mdlSelectRoom: ModalSelectRoomComponent;
+  @ViewChild('mdlSelectDefaultRoom') private mdlSelectDefaultRoom: ModalSelectRoomComponent;
 
   message: string;
   servicePointId: any;
@@ -35,6 +36,7 @@ export class QueueCallerComponent implements OnInit, OnDestroy {
   queueNumber: any;
   roomNumber: any;
   roomId: any;
+  roomName: any;
   queueId: any;
 
   isInterview = false;
@@ -319,6 +321,16 @@ export class QueueCallerComponent implements OnInit, OnDestroy {
     this.mdlServicePoint.open(false);
   }
 
+  selectRoom() {
+    this.mdlSelectDefaultRoom.open(false);
+  }
+
+  onSelectDefaultRoom(item) {
+    this.roomId = item.roomId;
+    this.roomNumber = item.roomNumber;
+    this.roomName = item.roomName;
+  }
+
   showSelectPointForMarkPending(item: any) {
     this.selectedQueue = item;
     this.isMarkPending = true;
@@ -369,9 +381,14 @@ export class QueueCallerComponent implements OnInit, OnDestroy {
   setCallDetail(item: any) {
     this.queueId = item.queue_id;
     this.queueNumber = item.queue_number;
-    if (this.rooms.length === 1) {
-      this.roomId = this.rooms[0].room_id;
-      this.roomNumber = this.rooms[0].room_number;
+    if (!this.roomId) {
+      if (this.rooms.length === 1) {
+        this.roomId = this.rooms[0].room_id;
+        this.roomNumber = this.rooms[0].room_number;
+
+        this.doCallQueue();
+      }
+    } else {
       this.doCallQueue();
     }
   }
@@ -515,5 +532,9 @@ export class QueueCallerComponent implements OnInit, OnDestroy {
     this.setQueueForCall(item);
     this.mdlSelectRoom.open();
   }
+  test() {
+    console.log(this.roomId);
+    console.log(this.roomName);
 
+  }
 }
