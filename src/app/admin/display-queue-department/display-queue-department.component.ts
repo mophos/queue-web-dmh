@@ -297,8 +297,6 @@ export class DisplayQueueDepartmentComponent implements OnInit, OnDestroy {
       try {
         const _payload = JSON.parse(payload.toString());
         if (that.isSound) {
-          console.log(that.departmentId, _payload.departmentId);
-
           if (+that.departmentId === +_payload.departmentId) {
             // play sound
             const sound = { queueNumber: _payload.queueNumber, roomNumber: _payload.roomNumber.toString() };
