@@ -88,13 +88,12 @@ export class DisplayQueueDepartmentComponent implements OnInit, OnDestroy {
         this.departmentId = +params.departmentId || null;
         this.departmentName = params.departmentName || null;
       });
-
-
   }
 
   ngOnInit() {
     try {
       const token = this.token || sessionStorage.getItem('token');
+
       if (token) {
         const decodedToken = this.jwtHelper.decodeToken(token);
 
@@ -104,22 +103,17 @@ export class DisplayQueueDepartmentComponent implements OnInit, OnDestroy {
         this.notifyUser = decodedToken.NOTIFY_USER;
         this.notifyPassword = decodedToken.NOTIFY_PASSWORD;
         this.getServicePoints();
-        if (this.token) {
-          if (sessionStorage.getItem('servicePoints')) {
-            const _servicePoints = sessionStorage.getItem('servicePoints');
-            const jsonDecodedServicePoint = JSON.parse(_servicePoints);
-            const _department = _.unionBy(jsonDecodedServicePoint, 'department_id');
-            if (_department.length === 1) {
-              this.onSelectDepartment(_department[0]);
-            }
-          } else {
-            if (this.departmentId) {
-              this.onSelectDepartment({ 'department_id': this.departmentId, 'department_name': this.departmentName });
-            } else {
-              this.initialSocket();
-            }
+
+        if (sessionStorage.getItem('servicePoints')) {
+          const _servicePoints = sessionStorage.getItem('servicePoints');
+          const jsonDecodedServicePoint = JSON.parse(_servicePoints);
+          const _department = _.unionBy(jsonDecodedServicePoint, 'department_id');
+          if (_department.length === 1) {
+            this.onSelectDepartment(_department[0]);
           }
         }
+
+        this.initialSocket();
       }
     } catch (error) {
       console.log(error);
