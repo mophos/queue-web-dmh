@@ -382,11 +382,13 @@ export class DisplayQueueDepartmentComponent implements OnInit, OnDestroy {
 
   async getServicePoints() {
     try {
-      const rs: any = await this.servicePointService.list();
+      const rs: any = await this.queueService.servicePointList(this.token);
       if (rs.statusCode === 200) {
         this.servicePoints = rs.results;
       }
     } catch (error) {
+      console.log(error);
+
       this.alertService.serverError();
     }
   }
