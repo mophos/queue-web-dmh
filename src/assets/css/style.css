@@ -18294,9 +18294,9 @@ input:focus {
 /* Fonts */
 @font-face {
   font-family: 'thaisans';
-  src: url("../fonts/thaisanslite_r1-webfont.eot");
+  src: url("../fonts/THSarabunNew.eot");
   /* IE9 Compat Modes */
-  src: url("../fonts/thaisanslite_r1-webfont.woff2") format("woff2"), url("../fonts/thaisanslite_r1-webfont.woff") format("woff"), url("../fonts/thaisanslite_r1-webfont.ttf") format("truetype");
+  src: url("../fonts/THSarabunNew.woff2") format("woff2"), url("../fonts/THSarabunNew.woff") format("woff"), url("../fonts/THSarabunNew.ttf") format("truetype");
 }
 
 /* Backgrounds  */

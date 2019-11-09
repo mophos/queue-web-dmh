@@ -36,6 +36,7 @@ export class QueueCallerComponent implements OnInit, OnDestroy {
   queueNumber: any;
   roomNumber: any;
   roomId: any;
+  roomDefaultId: any;
   roomName: any;
   queueId: any;
 
@@ -326,6 +327,7 @@ export class QueueCallerComponent implements OnInit, OnDestroy {
   }
 
   onSelectDefaultRoom(item) {
+    this.roomDefaultId = item.roomId;
     this.roomId = item.roomId;
     this.roomNumber = item.roomNumber;
     this.roomName = item.roomName;
@@ -357,7 +359,7 @@ export class QueueCallerComponent implements OnInit, OnDestroy {
     this.pendingToPriorityId = event.priorityId;
     this.pendigOldQueue = event.pendigOldQueue
     console.log(event.pendigOldQueue);
-    
+
     this.doMarkPending(this.selectedQueue);
   }
 
@@ -381,7 +383,7 @@ export class QueueCallerComponent implements OnInit, OnDestroy {
   setCallDetail(item: any) {
     this.queueId = item.queue_id;
     this.queueNumber = item.queue_number;
-    if (!this.roomId) {
+    if (!this.roomDefaultId) {
       if (this.rooms.length === 1) {
         this.roomId = this.rooms[0].room_id;
         this.roomNumber = this.rooms[0].room_number;
@@ -423,7 +425,8 @@ export class QueueCallerComponent implements OnInit, OnDestroy {
       this.alertService.error('กรุณาตรวจสอบการเชื่อมต่อกับ Notify Server');
     } else {
       try {
-        const rs: any = await this.queueService.callQueue(this.servicePointId, this.queueNumber, this.roomId, this.roomNumber, this.queueId, isCompleted);
+        const roomId = this.roomDefaultId ? this.roomDefaultId : this.roomId;
+        const rs: any = await this.queueService.callQueue(this.servicePointId, this.queueNumber, roomId, this.roomNumber, this.queueId, isCompleted);
         if (rs.statusCode === 200) {
           this.alertService.success();
           this.getAllList();
