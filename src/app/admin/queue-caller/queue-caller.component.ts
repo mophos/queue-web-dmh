@@ -36,6 +36,7 @@ export class QueueCallerComponent implements OnInit, OnDestroy {
   queueNumber: any;
   roomNumber: any;
   roomId: any;
+  roomDefalutNumber: any;
   roomDefaultId: any;
   roomName: any;
   queueId: any;
@@ -328,6 +329,7 @@ export class QueueCallerComponent implements OnInit, OnDestroy {
 
   onSelectDefaultRoom(item) {
     this.roomDefaultId = item.roomId;
+    this.roomDefalutNumber = item.roomNumber;
     this.roomId = item.roomId;
     this.roomNumber = item.roomNumber;
     this.roomName = item.roomName;
@@ -426,7 +428,8 @@ export class QueueCallerComponent implements OnInit, OnDestroy {
     } else {
       try {
         const roomId = this.roomDefaultId ? this.roomDefaultId : this.roomId;
-        const rs: any = await this.queueService.callQueue(this.servicePointId, this.queueNumber, roomId, this.roomNumber, this.queueId, isCompleted);
+        const roomNumber = this.roomDefalutNumber ? this.roomDefalutNumber : this.roomNumber;
+        const rs: any = await this.queueService.callQueue(this.servicePointId, this.queueNumber, roomId, roomNumber, this.queueId, isCompleted);
         if (rs.statusCode === 200) {
           this.alertService.success();
           this.getAllList();
