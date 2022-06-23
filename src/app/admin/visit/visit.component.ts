@@ -1,3 +1,4 @@
+import { NhsoService } from './../../shared/nhso.service';
 import { Component, OnInit, ViewChild, NgZone, Inject } from '@angular/core';
 import { PriorityService } from 'src/app/shared/priority.service';
 import { AlertService } from 'src/app/shared/alert.service';
@@ -59,6 +60,7 @@ export class VisitComponent implements OnInit {
     private queueService: QueueService,
     private alertService: AlertService,
     private servicePointService: ServicePointService,
+    private nhsoService: NhsoService,
     private zone: NgZone,
     @Inject('API_URL') private apiUrl: string,
   ) {
@@ -259,8 +261,7 @@ export class VisitComponent implements OnInit {
 
   async doRegister(prorityId: any, visit: any) {
     try {
-
-      var person: any = {};
+      const person: any = {};
       person.hn = visit.hn;
       person.vn = visit.vn;
       person.clinicCode = visit.clinic_code;
@@ -273,9 +274,34 @@ export class VisitComponent implements OnInit {
       person.title = visit.title;
       person.birthDate = moment(visit.birthdate).isValid() ? moment(visit.birthdate).format('YYYY-MM-DD') : null;
       person.sex = visit.sex;
+      try {
+        const nhsoInfo: any = await this.nhsoService.getCard();
+        // console.log(nhsoInfo);
+        if (nhsoInfo.status === 200) {
+          try {
+            const authenNHSO: any = await this.nhsoService.getAuthenCode(nhsoInfo.body.pid, nhsoInfo.body.correlationId, visit.hn, '12272');
+            if (authenNHSO.status === 200) {
+              await this.nhsoService.save({
+                claimCode: authenNHSO.body.claimCode,
+                pid: authenNHSO.body.pid,
+                createdDate: authenNHSO.body.createdDate
+              });
+            } else {
+              this.getLastToken(nhsoInfo.body.pid);
+            }
+          } catch (error) {
+            this.getLastToken(nhsoInfo.body.pid);
+          }
+
+        }
+      } catch (error) {
+        console.log(error);
+      }
 
       const rs: any = await this.queueService.register(person);
-
+      // const rs: any = {
+      //   statusCode: 400
+      // };
       if (rs.statusCode === 200) {
 
         const queueId: any = rs.queueId;
@@ -295,6 +321,21 @@ export class VisitComponent implements OnInit {
     } catch (error) {
       console.log(error);
       this.alertService.error('เกิดข้อผิดพลาด');
+    }
+  }
+
+  async getLastToken(cid) {
+    try {
+      const authenNHSO: any = await this.nhsoService.getLastToken(cid);
+      if (authenNHSO.status === 200) {
+        await this.nhsoService.save({
+          claimCode: authenNHSO.body.claimCode,
+          pid: authenNHSO.body.pid,
+          createdDate: authenNHSO.body.createdDate
+        });
+      }
+    } catch (error) {
+      console.log(error);
     }
   }
 }
